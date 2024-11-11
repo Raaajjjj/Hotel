@@ -1,0 +1,665 @@
+/* Navbar css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    overflow-x: hidden;
+    /* Prevent horizontal scroll issues */
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+    /* Prevent horizontal scroll issues */
+}
+
+
+
+/* Header Styling */
+header {
+    width: 100%;
+    /* Full-width header */
+    background: linear-gradient(to right,lightblue,aqua);
+    text-align: center;
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    position: fixed;
+    /* Fix the header at the top */
+    top: 0;
+    left: 0;
+    z-index: 10;
+    /* Ensure the header is above everything else */
+}
+
+/* Header Content */
+.header-content {
+    display: flex;
+    align-items: center;
+}
+
+/* Hamburger Button */
+.hamburger-button {
+    display: none;
+    /* Hidden by default */
+    font-size: 30px;
+    cursor: pointer;
+    padding: 10px;
+    /* Add some padding */
+    border: 2px solid black;
+    /* Add a border */
+    border-radius: 5px;
+    /* Round the corners */
+    margin-right: 15px;
+    /* Space between icon and text */
+}
+
+/* Navbar Styles for Small Screens */
+.navbar {
+    display: flex;
+    padding: 10px;
+    background-color: #eeeeee;
+}
+
+/* Navbar Links */
+nav-links {
+    list-style: none;
+    width: 100%;
+   
+    /* Ensure full width for each item */
+}
+
+
+.nav-links a {
+    display: block;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.nav-links a:hover {
+    background: linear-gradient(45deg, #B2F0F0, #A1E4E4, #90D9D9);
+    transform: scale(1.05);
+    /* Slight scaling effect */
+}
+
+.nav-links li.active a {
+    background: linear-gradient(45deg, lightblue, #00E5EE);
+    color: black;
+    /* Set the active link color to red */
+    pointer-events: none;
+    /* Prevent hover effects by disabling pointer events */
+}
+
+/* Main Content Area */
+main {
+    margin-left: 300px;
+    /* Space for the fixed navbar */
+    padding: 20px;
+    padding-top: 80px;
+    /* Leave space for the fixed header */
+}
+
+/* Responsive Styles for Small Screens */
+@media (max-width: 768px) {
+
+    .navbar,
+    .nav-links {
+        width: 110%;
+        /* Ensure it takes 100% of the viewport width */
+        overflow-x: hidden;
+        /* Avoid any child element overflow */
+    }
+
+    .navbar {
+        display: block;
+        padding: 10px;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 120px;
+        /* Push below the fixed header */
+        right: 0;
+        background: linear-gradient(180deg, #a8d9e3, #92cbd6, #7bbdc9);
+        width: 100%;
+        z-index: 9;
+        /* Ensure it's below the header */
+    }
+
+    .nav-links.active {
+        display: block;
+
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 15px;
+        
+        border-radius: 0px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: black;
+        text-decoration: none;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .nav-links li+li {
+        border-top: 2px solid rgba(0, 0, 0, 0.2);
+        /* Thin line between items */
+    }
+
+    .nav-links li:first-child {
+        border-top: 9px solid rgba(0, 0, 0, 0.2);
+        /* Line above Home */
+    }
+
+    .nav-links li:last-child {
+        border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+        /* Line below Khilona */
+    }
+
+
+    .hamburger-button {
+        display: block;
+        /* Show icon on small screens */
+        font-size: 24px;
+        /* Adjust font size for smaller screens */
+    }
+
+
+    header {
+        padding: 35px;
+        font-size: 20px;
+    }
+
+
+}
+
+/* Vertical Navbar for Larger Screens */
+@media (min-width: 769px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        height: calc(100vh - 40px);
+        /* Adjust height to leave space for header */
+        width: 300px;
+        position: fixed;
+        top: 40px;
+        /* Start below the header */
+        background-color: #f0f0f0;
+        padding-top: 20px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+    }
+
+    .nav-links li {
+        margin: 15px 0;
+    }
+
+    /* Ensure the menu icon is visible for larger screens but does nothing */
+    .hamburger-button {
+        display: none;
+        /* Hide the icon for larger screens */
+    }
+
+
+
+    .header-content {
+        display: block;
+        align-items: center;
+    }
+
+    header {
+
+        padding: 13px;
+    }
+}
+
+/*---------------------------Manage product row css----------------------------------*/
+.manage-product-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 10px 20px;
+    margin-top: 2px;
+    border-radius: 5px;
+}
+
+.manage-product-row h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.add-product-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-product-btn:hover {
+    background-color: #218838;
+}
+
+/* Mobile Responsiveness */
+/* Main Content Area for mobile */
+@media (max-width: 768px) {
+    main {
+        margin-left: 0;
+        /* Remove any fixed navbar spacing on small screens */
+        padding: 1px 20px;
+        /* Ensure space below fixed header */
+    }
+
+    .manage-product-row {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        /* Slightly narrower for small screens */
+        margin-top: 130px;
+        /* Consistent space below the navbar */
+    }
+
+    .manage-product-row h2 {
+        font-size: 1rem;
+        /* Adjust font size for smaller screens */
+        margin-bottom: 10px;
+        /* Add spacing below the title */
+    }
+
+    .add-product-btn {
+        width: 100%;
+        /* Full width button on small screens */
+        max-width: 270px;
+        /* Limit max width */
+        text-align: center;
+    }
+
+}
+
+/*---------------------------Filter row css----------------------------------*/
+
+.filter-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    /* Same background as manage-product-row */
+    padding: 10px 20px;
+    /* Same padding as manage-product-row */
+    margin-top: 23px;
+    /* Keep it consistent with manage-product-row */
+    border-radius: 5px;
+    /* Same rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Optional: similar shadow effect */
+}
+
+/* Filter input styling */
+.filter-bar {
+    width: 100%;
+    padding: 8px 15px;
+    /* Adjust padding for comfortable typing */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+/* Mobile Responsiveness for Filter Row */
+@media (max-width: 768px) {
+    .filter-row {
+        flex-direction: column;
+        /* Stack the elements on smaller screens */
+        align-items: center;
+        width: 100%;
+        margin-top: 25px;
+        /* Adjust margin for spacing */
+    }
+
+    .filter-bar {
+        width: 100%;
+        /* Full width on small screens */
+        max-width: 270px;
+        /* Limit max width to match button */
+
+    }
+}
+
+/*---------------------------Table css----------------------------------*/
+
+/* Table Container */
+.table-container {
+    background-color: #f0f0f0;
+    /* Same background as manage-product-row and filter-row */
+    padding: 3px 0;
+    /* Same padding for consistency */
+    margin-top: 23px;
+    /* Spacing between rows */
+    border-radius: 5px;
+    /* Rounded corners like in other rows */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Optional: add shadow for visual depth */
+}
+
+/* Table Styling */
+.table-container table {
+    width: 100%;
+    /* Full width to match the container */
+    border-collapse: collapse;
+    /* Remove space between table cells */
+}
+
+.table-container th,
+.table-container td {
+    padding: 10px 15px;
+    /* Padding for cells */
+    text-align: left;
+    /* Align text to the left */
+
+}
+
+.table-container th {
+    color: red;
+    /* Keep the red color as per your example */
+    font-weight: bold;
+    /* Bold text for table headers */
+    text-align: center;
+    border-bottom: 2px solid #333;
+    /* Stronger line under header */
+}
+
+.table-container td {
+    color: #333;
+    /* Text color for table data */
+    text-align: center;
+
+}
+
+.table-container tr {
+    display: table-row;
+    width: 100%;
+    border-bottom: 1.5px solid #ccc;
+    /* Horizontal line touching both edges of the table */
+}
+
+.table-container th:last-child,
+.table-container td:last-child {
+    text-align: center;
+    /* Ensure the last column, Action, is aligned to center */
+}
+
+/* Mobile Responsiveness for Table */
+@media (max-width: 768px) {
+    .table-container {
+        padding: 10px;
+        /* Adjust padding for smaller screens */
+        margin-top: 25px;
+        /* Consistent spacing on smaller screens */
+    }
+
+    .table-container table {
+        font-size: 0.9rem;
+        /* Adjust font size for better readability on small screens */
+    }
+
+    .table-container th,
+    .table-container td {
+        padding: 8px 10px;
+        /* Adjust padding for table cells */
+    }
+
+    .table-container th {
+        font-size: 1rem;
+        /* Reduce the font size of table headers slightly */
+    }
+
+    .table-container td {
+        font-size: 0.9rem;
+        /* Reduce font size of table data for smaller screens */
+    }
+}
+
+
+
+/*---------------------------Form(modal) css----------------------------------*/
+/* Modal Background */
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+#manageProductModal.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    overflow: auto;
+}
+
+input[type="text"],input[type="number"], select {
+    width: 100%;
+    padding: 8px; /* Reduced padding */
+    margin: 5px 0; /* Reduced margin */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 15px; /* Slightly smaller font */
+}
+
+/* Modal Content */
+#manageProductModal .modal-content {
+    background-color: #fff;
+    padding: 15px; /* Reduced padding */
+    margin: auto;
+    border-radius: 10px;
+    width: 60%; /* Adjusted width */
+    max-width: 450px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Slightly lighter shadow */
+    position: relative;
+    left: 15%; /* Centering adjustment */
+    top: 55%;
+    transform: translateY(-35%);
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+    #manageProductModal .modal-content {
+        width: 85%;
+        padding: 12px;
+        font-size: 14px;
+        left: 0;
+        top:58%;
+    }
+}
+
+/* Title */
+#manageProductModal #modalTitle {
+    text-align: center;
+    font-size: 22px; /* Slightly smaller title */
+    margin-bottom: 15px; /* Adjusted spacing */
+}
+
+/* Form Styles */
+#manageProductModal form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Reduced gap */
+}
+
+/* Label Styles */
+#manageProductModal label {
+    margin-bottom: 4px; /* Reduced margin */
+    font-weight: bold;
+    font-size: 15px;
+    color: #555;
+}
+
+/* Input Styles */
+#manageProductModal input[type="text"] {
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 5px;
+    font-size: 15px;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Button Container */
+#manageProductModal .button-container {
+    display: flex;
+    justify-content: space-around;
+    gap: 8px; /* Reduced gap */
+}
+
+/* Button Styles */
+#manageProductModal button {
+    padding: 10px 16px; /* Adjusted button padding */
+    font-size: 15px;
+}
+
+#manageProductModal #cancel {
+    background-color: #f44336;
+    color: white;
+}
+
+#manageProductModal #cancel:hover {
+    background-color: #e03129;
+}
+
+#manageProductModal #save {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#manageProductModal #save:hover {
+    background-color: #45a049;
+}
+
+/* Message Styles */
+#manageProductModal #message {
+    text-align: center;
+    margin-top: 12px;
+    font-weight: bold;
+    color: #f44336;
+}
+
+
+/*--------------------------edit and delete button-----------------------*/
+.edit-btn,
+.delete-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 20px;
+    margin-right: 5px;
+}
+
+.edit-btn:hover {
+    color: green;
+}
+
+.delete-btn:hover {
+    color: red;
+}
+
+
+/*--------------------------Notification-----------------------*/
+
+.notification {
+    position: fixed;
+    top: 2px;
+    left: 0;
+    right: 0;
+    background-color: #28a745;
+    /* Green background for success */
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 1000;
+    width: 55%;
+    margin: 1px auto;
+    opacity: 0;
+    animation: bounceIn 0.8s ease forwards;
+}
+
+.notification.hidden {
+    top: -75px;
+    /* Initially hidden */
+}
+
+/* Bounce In Animation (Active by default) */
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    .notification {
+        font-size: 16px;
+        top:0px;
+
+        width: 75%;
+    }
+}
+
+
+
+/*--------------------------disabled button-----------------------*/
+
+button:disabled {
+    background-color: #d3d3d3;
+    /* Light gray background */
+    color: #a9a9a9;
+    /* Gray text */
+    cursor: not-allowed;
+    /* Change cursor to indicate it's not clickable */
+    opacity: 0.6;
+    /* Make the button slightly transparent */
+}
+
+
+
+

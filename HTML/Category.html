@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Navbar</title>
+    <link rel="stylesheet" href="Category.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="hamburger-button" id="menu-icon">&#9776;</div>
+            <h3>Welcome To Raj Cafe</h3>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <ul class="nav-links" id="nav-links">
+            <li><a href="/">Dashboard</a></li>
+            <li class="active"><a href="/manage-category">Manage Category</a></li>
+            <li><a href="/manage-product">Manage Product</a></li>
+            <li><a href="/generate-bill">Generate Bill</a></li>
+            <li><a href="/view-bill">View Bill</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div id="notification" class="notification hidden">
+            <p id="notification-message"></p>
+        </div>
+
+        <div class="manage-category-row">
+            <h2>Manage Category</h2>
+            <button class="add-category-btn" id="addcategoryButton" type="button" onclick="opencategoryModal()">+ AddCategory</button>
+        </div>
+
+        <div class="filter-row">
+            <input type="text" class="filter-bar" placeholder="Filter" id="filterInput">
+        </div>
+
+        <div class="table-container" id="manage_Category-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="manage_Category-body"></tbody>
+            </table>
+        </div>
+
+        <div id="manageCategoryModal" class="modal">
+            <div class="modal-content">
+                <h1 id="modalTitle">Add Category Details</h1>
+                <form id="category-form">
+                    <label for="category-name">Category Name:</label>
+                    <input type="text" id="category-name" name="category-name" placeholder="Enter Category Name"required>
+                    <div class="button-container">
+                        <button id="cancel" type="button" onclick="closecategoryModall()">Cancel</button>
+                        <button id="save" type="submit" disabled>Save Details</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const menuIcon = document.getElementById('menu-icon');
+        const navLinks = document.getElementById('nav-links');
+
+        menuIcon.onclick = () => {
+            navLinks.classList.toggle('active');
+            document.querySelector('main').style.marginTop = navLinks.classList.contains('active') ? '265px' : '0';
+        };
+
+        const categoryNameInput = document.getElementById('category-name');
+        const saveButton = document.getElementById('save');
+
+        categoryNameInput.oninput = () => {
+            saveButton.disabled = !categoryNameInput.value.trim() || categoryNameInput.value.trim() === categoryoriginalname;
+        };
+
+        let categoryeditingId = null;
+        let categoryoriginalname = '';
+
+        const opencategoryModal = (id1 = null, name = '') => {
+            document.getElementById('manageCategoryModal').style.display = 'flex';
+            document.getElementById('modalTitle').textContent = id1 ? 'Edit Category Details' : 'Add Category Details';
+            categoryNameInput.value = categoryoriginalname = name;
+            categoryeditingId = id1;
+            categoryNameInput.oninput();
+        };
+
+        const closecategoryModall = () => {
+            document.getElementById('manageCategoryModal').style.display = 'none';
+        };
+
+        let categoriesList = [];
+
+        window.onload = async () => {
+            fetchCategories();
+        };
+
+        document.getElementById('category-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const categoryName = categoryNameInput.value.trim();
+            const url = categoryeditingId ? `/api/update-category/${categoryeditingId}` : '/api/add-category';
+
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ categoryName }),
+                });
+
+                if (res.status === 409) {
+                    const result = await res.json();
+                    showNotification(result.message);
+                    return;
+                }
+
+                const result = await res.json();
+                fetchCategories();
+                closecategoryModall();
+                showNotification(result.message);
+            } catch {
+                showNotification('An error occurred!', true);
+            }
+        });
+
+        const deleteCategory = async (id1, categoryName) => {
+            if (confirm(`Deleting the category ${categoryName} will also delete all its associated products. Are you sure you want to proceed?`)) {
+                try {
+                    const res = await fetch(`/api/delete-category/${id1}`, { method: 'DELETE' });
+                    const result = await res.json(); // Get the response from the backend
+
+                    if (res.ok) { // Check if the response is successful
+                        fetchCategories();
+                        showNotification(result.message); // Use the message from the backend
+                    } else {
+                        showNotification(result.message || 'An error occurred during deletion!', true);
+                    }
+                } catch {
+                    showNotification('An error occurred while deleting!', true);
+                }
+            }
+        };
+
+
+
+        const showNotification = (message) => {
+            const notification = document.getElementById('notification');
+            const notificationMessage = document.getElementById('notification-message');
+            notificationMessage.textContent = message;
+            notification.classList.remove('hidden');
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 3000);
+        };
+
+        const filterInput = document.getElementById('filterInput');
+        filterInput.oninput = () => {
+            const filterValue = filterInput.value.toLowerCase();
+            const filteredCategories = categoriesList.filter(category =>
+                category.categoryName.toLowerCase().includes(filterValue)
+            );
+            displayCategories(filteredCategories);
+        };
+
+        const fetchCategories = async () => {
+            try {
+                const res = await fetch('/api/category');
+                categoriesList = await res.json();
+                displayCategories(categoriesList);
+                return categoriesList;
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        };
+
+        const displayCategories = (categories) => {
+            const tbody = document.getElementById('manage_Category-body');
+            tbody.innerHTML = categories.map(({ _id, categoryName }) => `
+                <tr>
+                    <td>${categoryName}</td>
+                    <td>
+                        <button onclick="opencategoryModal('${_id}', '${categoryName}')">✏️</button>
+                        <button onclick="deleteCategory('${_id}','${categoryName}')">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+        };
+    </script>
+</body>
+
+</html>

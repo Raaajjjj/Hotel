@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Navbar</title>
+    <link rel="stylesheet" href="Dashboard.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="hamburger-button" id="menu-icon">&#9776;</div>
+            <h3>Welcome To Raj Cafe</h3>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <ul class="nav-links" id="nav-links">
+            <li class="active"><a href="/">Dashboard</a></li>
+            <li><a href="/manage-category">Manage Category</a></li>
+            <li><a href="/manage-product">Manage Product</a></li>
+            <li><a href="/generate-bill">Generate Bill</a></li>
+            <li><a href="/view-bill">View Bill</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="dashboard">
+            <div class="card top" id="category-count-card">
+                <h4>Total Categories</h4>
+                <p id="category-count">0</p>
+            </div>
+            <div class="card top" id="product-count-card">
+                <h4>Total Products</h4>
+                <p id="product-count">0</p>
+            </div>
+            <div class="card top" id="bill-count-card">
+                <h4>Bill Count</h4>
+                <p id="bill-count">0</p>
+            </div>
+            <div class="card middle" id="total-amount-card">
+                <h4>Total Earnings</h4>
+                <p id="total-amount">Amount</p>
+            </div>
+            <div class="card middle" id="most-used-product-card">
+                <h4>Most Sold Product</h4>
+                <p id="most-used-product">Product Name</p>
+            </div>
+            <div class="card middle" id="least-used-product-card">
+                <h4>Least Sold Product</h4>
+                <p id="least-used-product">Product Name</p>
+            </div>
+            <div class="card bottom" id="most-used-payment-card">
+                <h4>Preferred Payment</h4>
+                <p id="most-used-payment"> No Payment Method available</p>
+            </div>
+            <div class="card bottom" id="most-used-category-card">
+                <h4>High Demand Category</h4>
+                <p id="most-used-category">Category Name</p>
+            </div>
+            <div class="card bottom" id="least-used-category-card">
+                <h4>Low Demand Category</h4>
+                <p id="least-used-category">Category Name</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- JavaScript for Navbar Toggle and Data Fetching -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // Toggle Navbar
+        const menuIcon = document.getElementById('menu-icon');
+        const navLinks = document.getElementById('nav-links');
+
+        menuIcon.onclick = () => {
+            navLinks.classList.toggle('active');
+            document.querySelector('main').style.marginTop = navLinks.classList.contains('active') ? '265px' : '0';
+        };
+
+        // Establish Socket.IO connection
+        const socket = io();
+
+        // Update functions
+        function updateCategoryCount(count) {
+            document.getElementById('category-count').innerText = count;
+        }
+        function updateProductCount(count) {
+            document.getElementById('product-count').innerText = count;
+        }
+        function updateBillCount(count) {
+            document.getElementById('bill-count').innerText = count;
+        }
+        function updateTotalAmount(amount) {
+            document.getElementById('total-amount').innerText = `₹${amount}`;
+        }
+
+        // Update the most-used payment method
+        function updateMostUsedPayment(paymentMethods) {
+            const resultElement = document.getElementById('most-used-payment');
+            resultElement.innerHTML = ''; // Clear previous results
+
+            const paymentText = paymentMethods.map(method => method._id).join(',');
+            resultElement.textContent = paymentText;
+        }
+
+        // Real-time socket listeners
+        socket.on('updateCategoryCount', (data) => updateCategoryCount(data.count));
+        socket.on('updateProductCount', (data) => updateProductCount(data.count));
+        socket.on('updateBillCount', (data) => updateBillCount(data.count));
+
+        // Fetch functions
+        async function fetchTotalAmount() {
+            try {
+                const response = await fetch('/api/bill/total');
+                const data = await response.json();
+                updateTotalAmount(data.totalAmount);
+            } catch (error) {
+                console.error('Error fetching total amount:', error);
+            }
+        }
+        async function fetchCategoryCount() {
+            try {
+                const response = await fetch('/api/category-count');
+                const data = await response.json();
+                updateCategoryCount(data.count);
+            } catch (error) {
+                console.error('Error fetching category count:', error);
+            }
+        }
+        async function fetchProductCount() {
+            try {
+                const response = await fetch('/api/product-count');
+                const data = await response.json();
+                updateProductCount(data.count);
+            } catch (error) {
+                console.error('Error fetching product count:', error);
+            }
+        }
+        async function fetchBillCount() {
+            try {
+                const response = await fetch('/api/countBills');
+                const data = await response.json();
+                updateBillCount(data.count);
+            } catch (error) {
+                console.error('Error fetching bill count:', error);
+            }
+        }
+        async function fetchMostUsedPaymentMethod() {
+            try {
+                const response = await fetch('/api/payment-stats');
+                const data = await response.json();
+
+                if (data.mostUsedPaymentMethods && data.mostUsedPaymentMethods.length > 0) {
+                    updateMostUsedPayment(data.mostUsedPaymentMethods); // Pass array to update function
+                } else {
+                    console.log("No preferred payment method found.");
+                }
+            } catch (error) {
+                console.error('Error fetching most used payment method:', error);
+            }
+        }
+
+        async function fetchProductStats() {
+            try {
+                console.log('Fetching most and least popular products...');
+
+                const response = await fetch('/api/bill/most,least-used-product');
+                console.log('Response status:', response.status);  // Log status code
+
+                const data = await response.json();
+                console.log('Response data:', data);  // Log the full response data
+
+                // Handle Most Popular Product
+                const mostUsedProductElement = document.getElementById('most-used-product');
+                if (Array.isArray(data.mostUsedProducts) && data.mostUsedProducts.length > 0) {
+                    console.log('Most popular product(s):');
+                    mostUsedProductElement.innerText = data.mostUsedProducts.map(product => {
+                        return `${product._id} (Total Quantity: ${product.totalQuantity})`;
+                    }).join(', ');
+                } else {
+                    mostUsedProductElement.innerText = 'No most popular products available';
+                }
+
+                // Handle Least Popular Product
+                const leastUsedProductElement = document.getElementById('least-used-product');
+                if (Array.isArray(data.leastUsedProducts) && data.leastUsedProducts.length > 0) {
+                    console.log('Least popular product(s):');
+                    leastUsedProductElement.innerText = data.leastUsedProducts.map(product => {
+                        return `${product._id} (Total Quantity: ${product.totalQuantity})`;
+                    }).join(', ');
+                } else {
+                    leastUsedProductElement.innerText = 'No least popular products available';
+                }
+            } catch (error) {
+                console.error('Error fetching product stats:', error);
+            }
+        }
+
+        async function fetchCategoryStats() {
+            try {
+                console.log('Fetching most and least popular categories...');
+
+                const response = await fetch('/api/bill/most-least-used-category');
+                console.log('Response status:', response.status);  // Log status code
+
+                const data = await response.json();
+                console.log('Response data:', data);  // Log the full response data
+
+                // Handle Most Popular Category
+                const mostUsedCategoryElement = document.getElementById('most-used-category');
+                if (Array.isArray(data.mostUsedCategories) && data.mostUsedCategories.length > 0) {
+                    console.log('Most popular category(s):');
+                    mostUsedCategoryElement.innerText = data.mostUsedCategories.map(category => {
+                        return `${category._id} (Total Quantity: ${category.totalQuantity})`;
+                    }).join(', ');
+                } else {
+                    mostUsedCategoryElement.innerText = 'No most popular categories available';
+                }
+
+                // Handle Least Popular Category
+                const leastUsedCategoryElement = document.getElementById('least-used-category');
+                if (Array.isArray(data.leastUsedCategories) && data.leastUsedCategories.length > 0) {
+                    console.log('Least popular category(s):');
+                    leastUsedCategoryElement.innerText = data.leastUsedCategories.map(category => {
+                        return `${category._id} (Total Quantity: ${category.totalQuantity})`;
+                    }).join(', ');
+                } else {
+                    leastUsedCategoryElement.innerText = 'No least popular categories available';
+                }
+            } catch (error) {
+                console.error('Error fetching category stats:', error);
+            }
+        }
+
+
+
+        // Fetch counts and total on page load
+        fetchCategoryCount();
+        fetchProductCount();
+        fetchBillCount();
+        fetchTotalAmount();
+        fetchMostUsedPaymentMethod();
+        fetchProductStats();
+        fetchCategoryStats()
+    </script>
+</body>
+
+</html>

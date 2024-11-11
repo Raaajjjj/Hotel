@@ -1,0 +1,721 @@
+/* Navbar css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    overflow-x: hidden;
+    /* Prevent horizontal scroll issues */
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+    /* Prevent horizontal scroll issues */
+}
+
+
+
+/* Header Styling */
+header {
+    width: 100%;
+    /* Full-width header */
+    background: linear-gradient(to right,lightblue,aqua);
+    text-align: center;
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    position: fixed;
+    /* Fix the header at the top */
+    top: 0;
+    left: 0;
+    z-index: 10;
+    /* Ensure the header is above everything else */
+}
+
+/* Header Content */
+.header-content {
+    display: flex;
+    align-items: center;
+}
+
+/* Hamburger Button */
+.hamburger-button {
+    display: none;
+    /* Hidden by default */
+    font-size: 30px;
+    cursor: pointer;
+    padding: 10px;
+    /* Add some padding */
+    border: 2px solid black;
+    /* Add a border */
+    border-radius: 5px;
+    /* Round the corners */
+    margin-right: 15px;
+    /* Space between icon and text */
+}
+
+/* Navbar Styles for Small Screens */
+.navbar {
+    display: flex;
+    padding: 10px;
+    background-color: #eeeeee;
+}
+
+/* Navbar Links */
+nav-links {
+    list-style: none;
+    width: 100%;
+    /* Ensure full width for each item */
+}
+
+
+.nav-links a {
+    display: block;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.nav-links a:hover {
+    background: linear-gradient(45deg, #B2F0F0, #A1E4E4, #90D9D9);
+    color: navy;
+    transform: scale(1.05);
+    /* Slight scaling effect */
+}
+
+.nav-links li.active a {
+    background: linear-gradient(45deg, lightblue, #00E5EE);
+    color: black;
+    /* Set the active link color to red */
+    pointer-events: none;
+    /* Prevent hover effects by disabling pointer events */
+}
+
+/* Main Content Area */
+main {
+    margin-left: 300px;
+    /* Space for the fixed navbar */
+    padding: 20px;
+    padding-top: 80px;
+    /* Leave space for the fixed header */
+}
+
+/* Responsive Styles for Small Screens */
+@media (max-width: 768px) {
+
+    .navbar,
+    .nav-links {
+        width: 110%;
+        /* Ensure it takes 100% of the viewport width */
+        overflow-x: hidden;
+        /* Avoid any child element overflow */
+    }
+
+    .navbar {
+        display: block;
+        padding: 10px;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 120px;
+        /* Push below the fixed header */
+        right: 0;
+        background: linear-gradient(180deg, #a8d9e3, #92cbd6, #7bbdc9);
+        width: 100%;
+        z-index: 9;
+        /* Ensure it's below the header */
+    }
+
+    .nav-links.active {
+        display: block;
+
+    }
+
+    .nav-links a {
+        display: block;
+        padding: 15px;
+     
+        border-radius: 0px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: black;
+        text-decoration: none;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .nav-links li+li {
+        border-top: 2px solid rgba(0, 0, 0, 0.2);
+        /* Thin line between items */
+    }
+
+    .nav-links li:first-child {
+        border-top: 9px solid rgba(0, 0, 0, 0.2);
+        /* Line above Home */
+    }
+
+    .nav-links li:last-child {
+        border-bottom: 2px solid rgba(0, 0, 0, 0.2);
+        /* Line below Khilona */
+    }
+
+
+    .hamburger-button {
+        display: block;
+        /* Show icon on small screens */
+        font-size: 24px;
+        /* Adjust font size for smaller screens */
+    }
+
+
+    header {
+        padding: 35px;
+        font-size: 20px;
+    }
+
+
+}
+
+/* Vertical Navbar for Larger Screens */
+@media (min-width: 769px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        height: calc(100vh - 40px);
+        /* Adjust height to leave space for header */
+        width: 300px;
+        position: fixed;
+        top: 40px;
+        /* Start below the header */
+        background-color: #f0f0f0;
+        padding-top: 20px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+    }
+
+    .nav-links li {
+        margin: 15px 0;
+    }
+
+    /* Ensure the menu icon is visible for larger screens but does nothing */
+    .hamburger-button {
+        display: none;
+        /* Hide the icon for larger screens */
+    }
+
+
+
+    .header-content {
+        display: block;
+        align-items: center;
+    }
+
+    header {
+
+        padding: 13px;
+    }
+}
+
+/*---------------------------Manage product row css----------------------------------*/
+.manage-bill-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f0f0;
+    padding: 10px 20px;
+    margin-top: 2px;
+    border-radius: 5px;
+}
+
+.manage-bill-row h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.add-bill-btn {
+
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.add-bill-btn:hover {
+    background-color: #218838;
+}
+
+#reset-button {
+    background-color: green;
+    color: white;
+}
+
+
+/* Mobile Responsiveness */
+/* Main Content Area for mobile */
+@media (max-width: 768px) {
+    main {
+        margin-left: 0;
+        /* Remove any fixed navbar spacing on small screens */
+        padding: 1px 20px;
+        /* Ensure space below fixed header */
+    }
+
+    @media (max-width: 768px) {
+        .manage-bill-row {
+            flex-direction: row;
+            /* Keep everything in a row */
+            justify-content: space-around;
+            /* Distribute space evenly */
+            align-items: center;
+            width: 100%;
+            padding: 10px 0;
+            /* Adjust padding for smaller screens */
+            margin-top: 130px;
+            /* Space below navbar if needed */
+        }
+
+        .manage-bill-row h2 {
+            font-size: 1rem;
+        }
+
+        .add-bill-btn{
+            /* Assuming generate-bill-btn class for Generate Bill */
+            width: auto;
+            padding: 8px 15px;
+            margin: 0 5px;
+            /* Add spacing between buttons */
+        }
+    }
+}
+
+
+/*---------------------------Table css----------------------------------*/
+
+/* Table Container */
+.table-container {
+    background-color: #f0f0f0;
+    /* Same background as manage-product-row and filter-row */
+    padding: 3px 0;
+    /* Same padding for consistency */
+    margin-top: 23px;
+    /* Spacing between rows */
+    border-radius: 5px;
+    /* Rounded corners like in other rows */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* Optional: add shadow for visual depth */
+}
+
+/* Table Styling */
+.table-container table {
+    width: 100%;
+    /* Full width to match the container */
+    border-collapse: collapse;
+    /* Remove space between table cells */
+}
+
+.table-container th,
+.table-container td {
+    padding: 10px 15px;
+    /* Padding for cells */
+    text-align: left;
+    /* Align text to the left */
+
+}
+
+.table-container th {
+    color: red;
+    /* Keep the red color as per your example */
+    font-weight: bold;
+    /* Bold text for table headers */
+    text-align: center;
+    border-bottom: 2px solid #333;
+    /* Stronger line under header */
+}
+
+.table-container td {
+    color: #333;
+    /* Text color for table data */
+    text-align: center;
+
+}
+
+.table-container tr {
+    display: table-row;
+    width: 100%;
+    border-bottom: 1.5px solid #ccc;
+    /* Horizontal line touching both edges of the table */
+}
+
+.table-container th:last-child,
+.table-container td:last-child {
+    text-align: center;
+    /* Ensure the last column, Action, is aligned to center */
+}
+
+/* Mobile Responsiveness for Table */
+@media (max-width: 768px) {
+    .table-container {
+        padding: 10px;
+        /* Adjust padding for smaller screens */
+        margin-top: 25px;
+        /* Consistent spacing on smaller screens */
+    }
+
+    .table-container table {
+        font-size: 0.9rem;
+        /* Adjust font size for better readability on small screens */
+    }
+
+    .table-container th,
+    .table-container td {
+        padding: 8px 10px;
+        /* Adjust padding for table cells */
+    }
+
+    .table-container th {
+        font-size: 1rem;
+        /* Reduce the font size of table headers slightly */
+    }
+
+    .table-container td {
+        font-size: 0.9rem;
+        /* Reduce font size of table data for smaller screens */
+    }
+
+    /* Table Container - Make it horizontally scrollable */
+    .table-container {
+        overflow-x: auto;
+        /* Allow horizontal scrolling if the table exceeds the container width */
+    }
+
+    /* For mobile screens, make table columns narrower */
+    @media (max-width: 768px) {
+        .table-container table {
+            font-size: 0.85rem;
+            /* Adjust font size for smaller screens */
+        }
+
+        .table-container th,
+        .table-container td {
+            padding: 6px 8px;
+            /* Reduce padding */
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+        }
+    }
+
+}
+
+
+.customer-details-container,
+.product-details-container {
+    background-color: #f0f0f0;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 20px;
+    width: 100%;
+    margin-top: 23px;
+}
+
+.customer-details-container h3,
+.product-details-container h3 {
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.form-container {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    position: relative;
+    flex: 1;
+    min-width: 150px;
+    /* Reduced width to fit all items in a single line */
+}
+
+.form-group input::placeholder {
+    color:#333;
+}
+
+.form-group input,
+.form-group select {
+    width: 102%;
+    padding: 10px;
+    border: 1px solid #d1d1d1;
+    border-radius: 3px;
+    font-size: 14px;
+    color: #333;
+    outline: none;
+    height: 40px;
+    text-align: center;
+}
+
+/* Hide placeholder on focus */
+.form-group input:focus::placeholder,
+.form-group select:focus::placeholder {
+    color: transparent;
+}
+
+/* Initially hidden label */
+.form-group label {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b5b5b5;
+    font-size: 16px;
+    transition: 0.2s ease all;
+    pointer-events: none;
+    opacity: 0;
+}
+
+/* Show label when input has value or is focused */
+.form-group input:focus+label,
+.form-group input:not(:placeholder-shown)+label,
+.form-group select:focus+label,
+.form-group select:not([value=""])+label {
+    top: -5px;
+    font-size: 12px;
+    color: red;
+    opacity: 1;
+    transform: none;
+    text-align: left;
+}
+
+/* Payment label styling */
+.payment-label,
+.category-label,
+.product-label {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b5b5b5;
+    font-size: 16px;
+    transition: 0.2s ease all;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.payment-label.visible,
+.category-label.visible,
+.product-label.visible {
+    top: -5px;
+    font-size: 12px;
+    color: red;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    text-align: left;
+}
+
+.bottom-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#add-button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#total-amount {
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+}
+
+.select-product-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.total-display {
+    flex: 1;
+    text-align: right;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Button styling */
+.add-button {
+    flex: 0 0 auto;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#add-button:disabled,
+#addbillButton:disabled,
+#resetButton:disabled {
+    background-color: #ccc;
+    /* Light gray background */
+    color: #666;
+    /* Darker gray text */
+    cursor: not-allowed;
+    /* Show not-allowed cursor */
+    opacity: 0.6;
+    /* Slightly transparent */
+}
+
+
+/*--------------------------Notification-----------------------*/
+
+.notification {
+    position: fixed;
+    top: 2px;
+    left: 0;
+    right: 0;
+    background-color: #28a745;
+    /* Green background for success */
+    color: white;
+    padding: 15px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    z-index: 1000;
+    width: 50%;
+    margin: 1px auto;
+    opacity: 0;
+    animation: bounceIn 0.8s ease forwards;
+}
+
+.notification.hidden {
+    top: -90px;
+    /* Initially hidden */
+}
+
+/* Bounce In Animation (Active by default) */
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+
+    60% {
+        opacity: 1;
+        transform: scale(1.2);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+    .notification {
+        font-size: 16px;
+        top: 0px;
+        width: 74%;
+    }
+}
+
+/* Dark theme background */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Dark semi-transparent background */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it appears above other content */
+}
+
+/* Spinner container */
+.spinner {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px; /* Space between spinner and loading text */
+}
+
+/* Individual spinning dots with size variation */
+.spinner-dot {
+    width: 10px;
+    height: 10px;
+    background-color: red; /* Bright red color for dots */
+    border-radius: 50%;
+    position: absolute;
+    animation: dotSpin 0.8s infinite ease-in-out both; /* Faster speed */
+    opacity: 0.8;
+}
+
+/* Position dots in a larger circular pattern with size variation from small to big */
+.spinner-dot:nth-child(1) { animation-delay: 0s; top: -40px; left: 0; width: 6px; height: 6px; }
+.spinner-dot:nth-child(2) { animation-delay: 0.1s; top: -28px; left: 28px; width: 8px; height: 8px; }
+.spinner-dot:nth-child(3) { animation-delay: 0.2s; top: 0; left: 40px; width: 10px; height: 10px; }
+.spinner-dot:nth-child(4) { animation-delay: 0.3s; top: 28px; left: 28px; width: 12px; height: 12px; }
+.spinner-dot:nth-child(5) { animation-delay: 0.4s; top: 40px; left: 0; width: 14px; height: 14px; }
+.spinner-dot:nth-child(6) { animation-delay: 0.5s; top: 28px; left: -28px; width: 16px; height: 16px; }
+.spinner-dot:nth-child(7) { animation-delay: 0.6s; top: 0; left: -40px; width: 18px; height: 18px; }
+.spinner-dot:nth-child(8) { animation-delay: 0.7s; top: -28px; left: -28px; width: 20px; height: 20px; }
+
+/* Text below spinner */
+.loading-text {
+    color: #fff;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 45px;
+}
+
+/* Dot animation */
+@keyframes dotSpin {
+    0%, 100% { transform: scale(0.6); opacity: 0; }  /* Start small and faded out */
+    50% { transform: scale(1); opacity: 1; }         /* Grow larger and full opacity */
+}
+
+.hidden {
+    display: none; /* Hide elements with this class */
+}
+
+/* Apply the hidden class initially to the loading overlay */
+.loading-overlay.hidden {
+    display: none;
+}

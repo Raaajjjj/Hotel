@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Product</title>
+    <link rel="stylesheet" href="Product.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="hamburger-button" id="menu-icon">&#9776;</div>
+            <h3>Welcome To Raj Cafe</h3>
+        </div>
+    </header>
+    <nav class="navbar">
+        <ul class="nav-links" id="nav-links">
+            <li><a href="/">Dashboard</a></li>
+            <li><a href="/manage-category">Manage Category</a></li>
+            <li class="active"><a href="/manage-product">Manage Product</a></li>
+            <li><a href="/generate-bill">Generate Bill</a></li>
+            <li><a href="/view-bill">View Bill</a></li>
+        </ul>
+    </nav>
+    <main>
+        <div id="notification" class="notification hidden">
+            <p id="notification-message"></p>
+        </div>
+        <div class="manage-product-row">
+            <h2>Manage Product</h2>
+            <button class="add-product-btn" id="addProductButton" type="button" onclick="openProductModal()">+ Add
+                Product</button>
+        </div>
+        <div class="filter-row">
+            <input type="text" class="filter-bar" placeholder="Filter" id="filterInput">
+        </div>
+        <div class="table-container" id="manage_Product-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Category</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="manage_Product-body"></tbody>
+            </table>
+        </div>
+        <div id="manageProductModal" class="modal">
+            <div class="modal-content">
+                <h1 id="modalTitle">Add Product Details</h1>
+                <form id="product-form">
+                    <label for="product-name">Product Name:</label>
+                    <input type="text" id="product-name" name="product-name" placeholder="Enter Product Name" required>
+                    <label for="product-price">Price:</label>
+                    <input type="number" id="product-price" name="product-price" placeholder="Enter Price" required>
+                    <label for="category-select">Category:</label>
+                    <select id="category-select" name="category" required></select>
+                    <div class="button-container">
+                        <button id="cancel" type="button" onclick="closeModal()">Cancel</button>
+                        <button id="save" type="submit" disabled>Save Details</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+    <script>
+        const menuIcon = document.getElementById('menu-icon');
+        const navLinks = document.getElementById('nav-links');
+
+        menuIcon.onclick = () => {
+            navLinks.classList.toggle('active');
+            document.querySelector('main').style.marginTop = navLinks.classList.contains('active') ? '265px' : '0';
+        };
+
+
+        let categoriesList = [];
+        let productsList = [];
+        let editProductId = null;  // Track the product being edited
+        let originalValues = {};   // To store original values of fields
+
+        const fetchProducts = async () => {
+            const res = await fetch('/api/products');
+            productsList = await res.json();
+            displayProducts(productsList);
+        };
+
+        const fetchCategories = async () => {
+            const res = await fetch('/api/categories');
+            categoriesList = await res.json();
+            populateCategorySelect(categoriesList);
+        };
+
+        const populateCategorySelect = (categories) => {
+            const categorySelect = document.getElementById('category-select');
+            categorySelect.innerHTML = '<option value="" disabled selected>Select a category</option>';
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category._id;
+                option.textContent = category.categoryName;
+                categorySelect.appendChild(option);
+            });
+        };
+
+        const displayProducts = (products) => {
+            const tbody = document.getElementById('manage_Product-body');
+            tbody.innerHTML = '';
+            products.forEach(product => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${product.productName}</td>
+                    <td>${product.categoryName || 'N/A'}</td>
+                    <td>${product.productPrice}</td>
+                    <td>
+                        <button onclick="openProductModal('${product._id}', '${product.productName}', '${product.productPrice}', '${product.categoryId}')">✏️</button>
+                        <button onclick="deleteProduct('${product._id}')">🗑️</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        };
+
+        const openProductModal = (productId = '', productName = '', productPrice = '', categoryId = '') => {
+            editProductId = productId;  // Set the product being edited
+            const nameInput = document.getElementById('product-name');
+            const priceInput = document.getElementById('product-price');
+            const categorySelect = document.getElementById('category-select');
+            const saveButton = document.getElementById('save');
+
+            // Set the fields with initial values
+            nameInput.value = productName || '';
+            priceInput.value = productPrice || '';
+            categorySelect.value = categoryId || '';
+
+            // Store the original values when the modal opens (for editing case)
+            originalValues = {
+                productName: productName || '',
+                productPrice: productPrice || '',
+                categoryId: categoryId || ''
+            };
+
+            document.getElementById('modalTitle').textContent = productId ? 'Edit Product' : 'Add Product';
+            document.getElementById('manageProductModal').style.display = 'block';
+
+            // Disable save initially
+            saveButton.disabled = true;
+
+            // Add event listeners to track changes in the input fields
+            nameInput.removeEventListener('input', handleFieldChange);
+            priceInput.removeEventListener('input', handleFieldChange);
+            categorySelect.removeEventListener('change', handleFieldChange);
+
+            // Add new event listeners
+            nameInput.addEventListener('input', handleFieldChange);
+            priceInput.addEventListener('input', handleFieldChange);
+            categorySelect.addEventListener('change', handleFieldChange);
+
+            function handleFieldChange() {
+                // Check if all fields are filled when adding a new product
+                if (editProductId) {
+                    // For editing, enable Save button based on field changes
+                    if (nameInput.value !== originalValues.productName ||
+                        priceInput.value !== originalValues.productPrice ||
+                        categorySelect.value !== originalValues.categoryId) {
+                        saveButton.disabled = false;
+                    } else {
+                        saveButton.disabled = true;
+                    }
+                } else {
+                    // For adding, enable Save button only if all fields are filled
+                    if (nameInput.value && priceInput.value && categorySelect.value) {
+                        saveButton.disabled = false;
+                    } else {
+                        saveButton.disabled = true;
+                    }
+                }
+            }
+        };
+
+
+        const closeModal = () => {
+            document.getElementById('manageProductModal').style.display = 'none';
+        };
+
+        document.getElementById('product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const productName = document.getElementById('product-name').value;
+            const productPrice = parseFloat(document.getElementById('product-price').value);
+            const categoryId = document.getElementById('category-select').value;
+
+            const url = editProductId ? `/api/products/${editProductId}` : '/api/products';  // Determine endpoint based on editing or adding
+            const method = editProductId ? 'PUT' : 'POST';
+
+            const res = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productName, productPrice, categoryId })
+            });
+            const result = await res.json();
+
+            if (result.success) {
+                showNotification(result.message);
+                fetchProducts();
+                closeModal();
+            } else {
+                showNotification(result.message);
+            }
+        });
+
+        const showNotification = (msg) => {
+            const notification = document.getElementById('notification');
+            notification.querySelector('#notification-message').textContent = msg;
+            notification.classList.remove('hidden');
+            setTimeout(() => notification.classList.add('hidden'), 3000);
+        };
+
+        const filterInput = document.getElementById('filterInput');
+        filterInput.oninput = () => {
+            const filterValue = filterInput.value.toLowerCase();
+            const filteredProducts = productsList.filter(product =>
+                product.productName.toLowerCase().includes(filterValue) ||
+                product.categoryName.toLowerCase().includes(filterValue)
+            );
+            displayProducts(filteredProducts);
+        };
+
+        const deleteProduct = async (id) => {
+            try {
+                const res = await fetch(`/api/delete-product/${id}`, { method: 'DELETE' });
+                const result = await res.json();
+                if (res.ok) { // Check if the response is successful
+                    fetchProducts();
+                    showNotification(result.message); // Use the message from the backend
+                } else {
+                    showNotification(result.message || 'An error occurred during deletion!', true);
+                }
+            } catch {
+                showNotification('An error occurred while deleting!', true);
+            }
+        };
+
+        fetchCategories();
+        fetchProducts();
+    </script>
+
+</body>
+
+</html>

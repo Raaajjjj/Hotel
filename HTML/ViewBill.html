@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Product</title>
+    <link rel="stylesheet" href="ViewBill.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="hamburger-button" id="menu-icon">&#9776;</div>
+            <h3>Welcome To Raj Cafe</h3>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <ul class="nav-links" id="nav-links">
+            <li><a href="/">Dashboard</a></li>
+            <li><a href="/manage-category">Manage Category</a></li>
+            <li><a href="/manage-product">Manage Product</a></li>
+            <li><a href="/generate-bill">Generate Bill</a></li>
+            <li class="active"><a href="/view-bill">View Bill</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div id="notification" class="notification hidden">
+            <p id="notification-message"></p>
+        </div>
+
+        <div id="billModal" class="modal hidden">
+            <div class="container">
+                <div class="header">
+                    <span class="close" onclick="closeBillModal()">&times;</span>
+                    <h1>Welcome To Raj Cafe</h1>
+                    <p><strong>Date:</strong> <span id="billDate"></span></p>
+                </div>
+
+                <div class="customer-info">
+                    <p><strong>Name:</strong> <span id="billCustomerName"></span></p>
+                    <p><strong>Contact Number:</strong> <span id="billContactNumber"></span></p>
+                    <p><strong>Payment Method:</strong> <span id="billPaymentMethod"></span></p>
+                </div>
+                <table class="product-table">
+                    <tr>
+                        <th>Name</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Sub Total</th>
+                    </tr>
+                    <tbody id="billItems" class="modal-table-body"></tbody>
+                </table>
+                <div class="total">
+                    <strong>Total Amount:</strong> ₹<span id="billTotalAmount"></span>
+                </div>
+
+                <div class="footer">
+                    <p>Thank you for visiting. Please visit again!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="manage-product-row">
+            <h2>View Bill</h2>
+            <button class="add-product-btn" id="addProductButton" type="button" onclick="deleteAllBills()"
+                disabled>Delete All</button>
+        </div>
+
+        <div class="filter-row">
+            <input type="text" class="filter-bar" placeholder="Filter" id="filterInput">
+        </div>
+
+        <div class="table-container" id="manage_Product-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Contact Number</th>
+                        <th>Payment Method</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="manage_Product-body"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        const menuIcon = document.getElementById('menu-icon');
+        const navLinks = document.getElementById('nav-links');
+        const filterInput = document.getElementById('filterInput');
+        let allBills = []; // Array to hold all bills
+
+        menuIcon.onclick = () => {
+            navLinks.classList.toggle('active');
+            document.querySelector('main').style.marginTop = navLinks.classList.contains('active') ? '265px' : '0';
+        };
+
+        const notification = document.getElementById('notification');
+        const showNotification = (msg) => {
+            notification.querySelector('#notification-message').textContent = msg;
+            notification.classList.remove('hidden');
+            setTimeout(() => notification.classList.add('hidden'), 3000);
+        };
+
+        filterInput.oninput = () => {
+            const filterValue = filterInput.value.toLowerCase();
+            const filteredBills = allBills.filter(bill =>
+                bill.customerName?.toLowerCase().includes(filterValue) ||
+                bill.contactNumber?.toLowerCase().includes(filterValue) ||
+                bill.paymentMethod?.toLowerCase().includes(filterValue) ||
+                bill.totalBillAmount?.toString().toLowerCase().includes(filterValue)
+            );
+            displayFilteredBills(filteredBills);
+        };
+
+        // Get reference to the "Delete All" button
+        const deleteAllButton = document.getElementById('addProductButton');
+
+        async function loadAllBills() {
+            try {
+                const response = await fetch('/api/bill/all');
+                if (!response.ok) throw new Error('Failed to fetch bills');
+                allBills = await response.json();
+                console.log('Loaded all bills:', allBills); // Debugging statement
+
+                // Enable the "Delete All" button if there are bills
+                if (allBills.length > 0) {
+                    deleteAllButton.disabled = false;
+                } else {
+                    deleteAllButton.disabled = true;
+                }
+
+                displayFilteredBills(allBills); // Display all bills initially
+            } catch (error) {
+                console.error('Error loading bills:', error);
+            }
+        }
+
+
+        function displayFilteredBills(filteredBills) {
+            const billTableBody = document.getElementById('manage_Product-body');
+            billTableBody.innerHTML = ''; // Clear existing rows
+            filteredBills.forEach(bill => displayBillData(bill));
+        }
+
+        function displayBillData({ _id, customerName, contactNumber, paymentMethod, totalBillAmount }) {
+            console.log('Displaying bill data:', { _id, customerName, contactNumber, paymentMethod, totalBillAmount }); // Debugging statement
+            const billTableBody = document.getElementById('manage_Product-body');
+            const newRow = document.createElement('tr');
+            newRow.id = `bill-row-${_id}`;  // Add unique ID to each row
+
+            newRow.innerHTML = `
+        <td>${customerName || 'N/A'}</td>
+        <td>${contactNumber || 'N/A'}</td>
+        <td>${paymentMethod || 'N/A'}</td>
+        <td>${totalBillAmount || 'N/A'}</td>
+        <td>
+            <button onclick="viewBill('${_id}')">👁️</button> 
+            <button onclick="downloadBill('${_id}')">⬇️</button>
+            <button onclick="deleteBill('${_id}')">🗑️</button>
+        </td>
+    `;
+            billTableBody.appendChild(newRow);
+        }
+
+        async function viewBill(id) {
+            try {
+                const response = await fetch(`/api/bill/${id}`);
+                if (!response.ok) throw new Error('Failed to fetch bill data');
+
+                const billData = await response.json();
+                console.log('Viewing bill data:', billData); // Debugging statement
+
+                document.getElementById('billDate').textContent = billData.generatedAt || 'N/A';
+                document.getElementById('billCustomerName').textContent = billData.customerName || 'N/A';
+                document.getElementById('billContactNumber').textContent = billData.contactNumber || 'N/A';
+                document.getElementById('billPaymentMethod').textContent = billData.paymentMethod || 'N/A';
+
+                const billItemsContainer = document.getElementById('billItems');
+                billItemsContainer.innerHTML = '';
+                (billData.items || []).forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.product || 'N/A'}</td>
+                        <td>${item.quantity || 'N/A'}</td>
+                        <td>₹${item.price || 0}</td>
+                        <td>₹${item.quantity * item.price || 0}</td>
+                    `;
+                    billItemsContainer.appendChild(row);
+                });
+
+                document.getElementById('billTotalAmount').textContent = billData.totalBillAmount || 'N/A';
+                openBillModal();
+            } catch (error) {
+                console.error('Error viewing bill:', error);
+            }
+        }
+
+        async function downloadBill(id) {
+            console.log('Attempting to download bill with ID:', id);
+            const res = await fetch(`/api/bill/download/${id}`);
+            if (res.ok) {
+                const downloadLink = document.createElement('a');
+                downloadLink.href = `/api/bill/download/${id}`;
+                downloadLink.download = `bill_${id}.pdf`;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+                showNotification('Bill downloaded successfully');
+            } else {
+                console.error('Failed to download bill:', await res.text());
+                showNotification('Failed to download bill');
+            }
+        }
+
+        async function deleteBill(id) {
+            console.log('Attempting to delete bill with ID:', id);
+            const response = await fetch(`/api/bill/delete/${id}`, { method: 'DELETE' });
+            if (response.ok) {
+                console.log('Bill deleted successfully');
+                showNotification('Bill deleted successfully');
+
+                // Remove the deleted bill from the DOM
+                const billRow = document.getElementById(`bill-row-${id}`);
+                if (billRow) {
+                    billRow.remove();  // Remove the row from the table
+                }
+                allBills = allBills.filter(bill => bill._id !== id);
+                deleteAllButton.disabled = allBills.length === 0;
+            } else {
+                console.error('Failed to delete bill:', await response.text());
+                showNotification('Failed to delete bill');
+            }
+        }
+        function openBillModal() {
+            document.getElementById('billModal').classList.remove('hidden');
+        }
+
+        function closeBillModal() {
+            document.getElementById('billModal').classList.add('hidden');
+        }
+
+        async function deleteAllBills() {
+            const confirmDelete = confirm("Are you sure you want to delete all bills?");
+            if (!confirmDelete) return;
+
+            try {
+                const response = await fetch('/api/bill/deleteAll', { method: 'DELETE' });
+                if (response.ok) {
+                    console.log('All bills deleted successfully');
+                    showNotification('All bills deleted successfully');
+                    deleteAllButton.disabled = true;  // Disable button when no bills are left
+
+                    // Remove all rows from the table
+                    const billTableBody = document.getElementById('manage_Product-body');
+                    billTableBody.innerHTML = '';  // Clear all rows from the table
+                } else {
+                    console.error('Failed to delete all bills:', await response.text());
+                    showNotification('Failed to delete all bills');
+                }
+            } catch (error) {
+                console.error('Error deleting all bills:', error);
+                showNotification('Error deleting all bills');
+            }
+        }
+
+
+        loadAllBills();
+    </script>
+</body>
+
+</html>

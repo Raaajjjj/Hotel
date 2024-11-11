@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        /* General layout */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7f7f7;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header styles */
+        .header {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            margin: 0;
+            color: #3498db;
+        }
+
+        .header p {
+            font-size: 16px;
+            color: black;
+        }
+
+        /* Customer information (Name, Contact Number, Payment Method) headings */
+        .customer-info p strong {
+            color: black;  /* Red color for the headings */
+        }
+
+        /* Product table styling */
+        .product-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        .product-table th {
+            background-color: #3498db;
+            color: #e74c3c;
+            padding: 12px;
+            font-size: 16px;
+            text-transform: uppercase;
+            border: 1px solid #ddd;
+        }
+
+        .product-table td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+            text-align: center;
+            color: black; /* Data remains in black */
+        }
+
+        .product-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        /* Total amount styling */
+        .total {
+            font-size: 20px;
+            font-weight: 600;
+            text-align: right;
+            margin-top: 20px;
+            color: #e74c3c;
+        }
+
+        /* Footer styles */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #95a5a6;
+        }
+
+        .footer p {
+            margin: 0;
+            font-style: italic;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .total {
+                font-size: 18px;
+            }
+
+            .product-table th, .product-table td {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Welcome To Raj Cafe</h1>
+            <p>Date: {{generatedAt}}</p>
+        </div>
+        <div class="customer-info">
+            <p><strong>Name:</strong> {{customerName}}</p>
+            <p><strong>Contact Number:</strong> {{contactNumber}}</p>
+            <p><strong>Payment Method:</strong> {{paymentMethod}}</p>
+        </div>
+        <table class="product-table">
+            <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Sub Total</th>
+            </tr>
+            {{#each items}}
+            <tr>
+                <td>{{product}}</td>
+                <td>{{quantity}}</td>
+                <td>₹{{price}}</td>
+                <td>₹{{total}}</td>
+            </tr>
+            {{/each}}
+        </table>
+        <div class="total">
+            Total Amount: ₹{{totalBillAmount}}
+        </div>
+        <div class="footer">
+            <p>Thank you for visiting. Please visit again!</p>
+        </div>
+    </div>
+</body>
+</html>
