@@ -1,0 +1,30 @@
+{
+  "name": "hotel",
+  "version": "1.0.0",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "puppeteer install",
+     "build": "apt-get install -y libxshmfence1 && npm install"
+  },
+  "author": "raj",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "bson": "^6.9.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "handlebars": "^4.7.8",
+    "install": "^0.13.0",
+    "mailgun-js": "^0.22.0",
+    "mongo": "^0.1.0",
+    "mongodb": "^6.10.0",
+    "nodemailer": "^6.9.15",
+    "nodemon": "^3.1.7",
+    "pdfkit": "^0.15.1",
+    "puppeteer": "^23.7.1",
+    "socket.io": "^4.8.1"
+  }
+}
